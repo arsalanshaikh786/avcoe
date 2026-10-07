@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Practical Share – Code & Screenshot seedha WhatsApp pe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=JetBrains+Mono:wght@400;500&family=Hind:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f3f6f4; --ink:#12302b; --muted:#5c7670; --line:#c9d8d3; --card:#ffffff;
+  --accent:#0e7c66; --accent-ink:#ffffff; --margin:#e5736b; --code-bg:#fbfdfc; --err:#c0392b;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--paper:#0d1b18;--ink:#e3f1ed;--muted:#8fb0a8;--line:#244039;--card:#13261f;--code-bg:#0f201b;--accent:#2fbf9b;--accent-ink:#06211a;--margin:#e08a82}
+}
+:root[data-theme="dark"]{--paper:#0d1b18;--ink:#e3f1ed;--muted:#8fb0a8;--line:#244039;--card:#13261f;--code-bg:#0f201b;--accent:#2fbf9b;--accent-ink:#06211a;--margin:#e08a82}
+*{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font:16px/1.55 'Hind',system-ui,sans-serif;
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:28px 28px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;background:var(--paper);opacity:.82;pointer-events:none;z-index:-1}
+.wrap{max-width:680px;margin:0 auto;padding:28px 16px 40px}
+h1{font:800 clamp(30px,7vw,44px)/1.05 'Bricolage Grotesque',sans-serif;margin:0 0 8px;letter-spacing:-.02em}
+.sub{color:var(--muted);margin:0 0 24px;max-width:46ch}
+.card{background:var(--card);border:1.5px solid var(--ink);border-radius:6px;padding:20px;box-shadow:5px 5px 0 var(--ink)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+label{display:block;font:700 14px 'Bricolage Grotesque',sans-serif;margin:16px 0 6px}
+label i{color:var(--margin);font-style:normal}
+label span{font-weight:500;color:var(--muted);font-family:'Hind',sans-serif}
+input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--code-bg);border:1.5px solid var(--line);border-radius:4px;padding:11px 12px}
+input:focus,textarea:focus,button:focus-visible,.drop:focus-visible{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.codewrap{position:relative;border:1.5px solid var(--line);border-radius:4px;background:var(--code-bg);overflow:hidden}
+.codewrap::before{content:"";position:absolute;left:44px;top:0;bottom:0;width:2px;background:var(--margin);opacity:.7}
+.codewrap textarea{border:0;border-radius:0;background:transparent;font:400 13.5px/1.6 'JetBrains Mono',monospace;padding:12px 12px 12px 58px;min-height:200px;resize:vertical;white-space:pre;overflow:auto;tab-size:4}
+.codewrap:focus-within{border-color:var(--accent)}
+.codewrap textarea:focus{outline:0}
+.drop{border:2px dashed var(--muted);border-radius:4px;padding:22px;text-align:center;color:var(--muted);cursor:pointer;transition:background .15s,border-color .15s}
+.drop.over{background:var(--code-bg);border-color:var(--accent);color:var(--ink)}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin-top:12px}
+.thumb{position:relative;aspect-ratio:1;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden;background:var(--code-bg)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);font-size:15px;line-height:1;cursor:pointer;padding:0}
+.send{margin-top:22px;width:100%;padding:14px;font:800 17px 'Bricolage Grotesque',sans-serif;background:var(--accent);color:var(--accent-ink);border:1.5px solid var(--ink);border-radius:4px;box-shadow:3px 3px 0 var(--ink);cursor:pointer}
+.send:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.send:disabled{opacity:.6;cursor:wait}
+.status{margin-top:14px;min-height:22px;font-size:15px}
+.status.err{color:var(--err)}
+.status.ok{color:var(--accent);font-weight:500}
+.bar{height:6px;background:var(--line);border-radius:3px;margin-top:10px;overflow:hidden;display:none}
+.bar b{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+footer{text-align:center;margin-top:26px;color:var(--muted);font-size:14px}
+footer strong{color:var(--ink);font-family:'Bricolage Grotesque',sans-serif}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Practical Share</h1>
+  <p class="sub">Code aur screenshot likho, student ka naam aur number daalo — seedha uske WhatsApp pe chala jayega.</p>
+
+  <section class="card">
+    <div class="row">
+      <div>
+        <label for="sname">Student ka naam <i>*</i></label>
+        <input id="sname" type="text" autocomplete="off" placeholder="Jaise: Rahul Patil">
+      </div>
+      <div>
+        <label for="snum">WhatsApp number <i>*</i></label>
+        <input id="snum" type="tel" inputmode="numeric" autocomplete="off" placeholder="10 digit number" maxlength="15">
+      </div>
+    </div>
+
+    <label for="title">Practical ka naam <span>(optional)</span></label>
+    <input id="title" type="text" autocomplete="off" placeholder="Jaise: PPS Practical 5 – Fibonacci">
+
+    <label for="code">Code <span>(optional)</span></label>
+    <div class="codewrap"><textarea id="code" spellcheck="false" placeholder="Yahan code paste karo..."></textarea></div>
+
+    <label>Screenshots <span>(optional, ek se zyada chalenge)</span></label>
+    <div class="drop" id="drop" tabindex="0" role="button" aria-label="Screenshot chuno">
+      Screenshot yahan drop karo, ya tap karke chuno<br><small>Ctrl+V se paste bhi kar sakte ho</small>
+    </div>
+    <input id="files" type="file" accept="image/*" multiple hidden>
+    <div class="thumbs" id="thumbs"></div>
+
+    <button class="send" id="send">WhatsApp pe bhejo</button>
+    <div class="bar" id="bar"><b id="barfill"></b></div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <footer>Developed by <strong>Arsalan Shaikh</strong></footer>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ====== CONFIG ====== */
+const firebaseConfig = { apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ", authDomain: "multi-service-app-77dd8.firebaseapp.com", projectId: "multi-service-app-77dd8", storageBucket: "multi-service-app-77dd8.appspot.com", messagingSenderId: "123732555482", appId: "1:123732555482:web:ea47c825e0dbb504f597e3" };
+const CLOUDINARY = { cloudName: "YOUR_CLOUD_NAME", uploadPreset: "YOUR_UNSIGNED_PRESET" }; // <-- apna daalo
+const ULTRA = { base: "https://api.ultramsg.com/instance192669", token: "xnbaeejigdwjjij1" };
+const CREDIT = "_Developed by Arsalan Shaikh_";
+/* ==================== */
+
+const db = getFirestore(initializeApp(firebaseConfig));
+const $ = id => document.getElementById(id);
+const st = $("status"), bar = $("bar"), fill = $("barfill"), sendBtn = $("send");
+let images = [];
+
+function say(msg, cls = "") { st.textContent = msg; st.className = "status " + cls; }
+function progress(p) { bar.style.display = "block"; fill.style.width = p + "%"; }
+
+function normalizeNumber(raw) {
+  const d = raw.replace(/\D/g, "");
+  if (d.length === 10) return "91" + d;
+  if (d.length === 12 && d.startsWith("91")) return d;
+  if (d.length === 11 && d.startsWith("0")) return "91" + d.slice(1);
+  return null;
+}
+
+/* ---------- images ---------- */
+function addFiles(list) {
+  [...list].filter(f => f.type.startsWith("image/")).forEach(f => images.push(f));
+  renderThumbs();
+}
+function renderThumbs() {
+  const box = $("thumbs"); box.innerHTML = "";
+  images.forEach((f, i) => {
+    const d = document.createElement("div"); d.className = "thumb";
+    const img = document.createElement("img"); img.src = URL.createObjectURL(f); img.alt = f.name;
+    const x = document.createElement("button"); x.type = "button"; x.textContent = "×"; x.setAttribute("aria-label", "Hata do");
+    x.onclick = () => { images.splice(i, 1); renderThumbs(); };
+    d.append(img, x); box.append(d);
+  });
+}
+const drop = $("drop"), picker = $("files");
+drop.onclick = () => picker.click();
+drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); picker.click(); } };
+picker.onchange = () => { addFiles(picker.files); picker.value = ""; };
+["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => addFiles(e.dataTransfer.files));
+document.addEventListener("paste", e => { const f = [...(e.clipboardData?.files || [])]; if (f.length) addFiles(f); });
+
+/* tab key inside code box */
+$("code").addEventListener("keydown", e => {
+  if (e.key === "Tab") { e.preventDefault(); const t = e.target, s = t.selectionStart; t.setRangeText("    ", s, t.selectionEnd, "end"); }
+});
+
+/* ---------- services ---------- */
+async function uploadToCloudinary(file) {
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", CLOUDINARY.uploadPreset);
+  const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY.cloudName}/image/upload`, { method: "POST", body: fd });
+  const j = await r.json();
+  if (!r.ok || !j.secure_url) throw new Error("Cloudinary upload fail: " + (j.error?.message || r.status));
+  return j.secure_url;
+}
+
+async function ultra(endpoint, params) {
+  const r = await fetch(`${ULTRA.base}/messages/${endpoint}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ token: ULTRA.token, ...params })
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.error) throw new Error("WhatsApp send fail: " + (typeof j.error === "string" ? j.error : JSON.stringify(j.error || r.status)));
+  return j;
+}
+
+function chunk(text, size = 3500) {
+  const out = []; let rest = text;
+  while (rest.length > size) {
+    let cut = rest.lastIndexOf("\n", size); if (cut < size / 2) cut = size;
+    out.push(rest.slice(0, cut)); rest = rest.slice(cut);
+  }
+  if (rest.trim()) out.push(rest);
+  return out;
+}
+
+/* ---------- send ---------- */
+sendBtn.onclick = async () => {
+  const name = $("sname").value.trim();
+  const to = normalizeNumber($("snum").value);
+  const title = $("title").value.trim();
+  const code = $("code").value.replace(/\s+$/, "");
+
+  if (!name) return say("Student ka naam daalna zaroori hai.", "err");
+  if (!to) return say("Sahi WhatsApp number daalo (10 digit, ya 91 ke saath).", "err");
+  if (!code && !images.length) return say("Code likho ya kam se kam ek screenshot chuno.", "err");
+  if (CLOUDINARY.cloudName.startsWith("YOUR_") && images.length) return say("Code me Cloudinary cloudName aur uploadPreset set karo.", "err");
+
+  sendBtn.disabled = true; bar.style.display = "none";
+  const total = images.length + (code ? 1 : 0) + 1; let done = 0;
+  const step = () => progress(Math.round(++done / total * 100));
+  const header = `📚 *${title || "Practical"}*\nNamaste ${name} 👋\n`;
+
+  try {
+    const urls = [];
+    for (let i = 0; i < images.length; i++) {
+      say(`Screenshot ${i + 1}/${images.length} upload ho raha hai...`);
+      urls.push(await uploadToCloudinary(images[i])); step();
+    }
+
+    if (code) {
+      say("Code bhej rahe hain...");
+      const parts = chunk(code);
+      for (let i = 0; i < parts.length; i++) {
+        const head = i === 0 ? header + "\n" : `(Part ${i + 1}/${parts.length})\n`;
+        const foot = i === parts.length - 1 && !urls.length ? "\n\n" + CREDIT : "";
+        await ultra("chat", { to, body: `${head}\`\`\`${parts[i]}\`\`\`${foot}` });
+      }
+      step();
+    }
+
+    for (let i = 0; i < urls.length; i++) {
+      say(`Screenshot ${i + 1}/${urls.length} bhej rahe hain...`);
+      const cap = (i === 0 && !code ? header + "\n" : "") + (urls.length > 1 ? `Screenshot ${i + 1}/${urls.length}` : "") + (i === urls.length - 1 ? `\n${CREDIT}` : "");
+      await ultra("image", { to, image: urls[i], caption: cap.trim() });
+    }
+
+    say("Record save ho raha hai...");
+    await addDoc(collection(db, "practical_shares"), {
+      studentName: name, studentNumber: "+" + to, title, code, images: urls,
+      createdAt: serverTimestamp()
+    }).catch(err => console.warn("Firestore save fail:", err));
+    progress(100);
+
+    say(`✅ ${name} ke WhatsApp pe bhej diya!`, "ok");
+    $("code").value = ""; $("title").value = ""; images = []; renderThumbs();
+  } catch (e) {
+    console.error(e); say(e.message || "Kuch gadbad ho gayi, dobara try karo.", "err");
+  } finally { sendBtn.disabled = false; }
+};
+</script>
+</body>
+</html>

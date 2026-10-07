@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Practical Share – Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=JetBrains+Mono:wght@400;500&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070b16;--ink:#e8eefc;--muted:#8a97b8;--glass:rgba(18,26,48,.66);--line:rgba(140,160,220,.18);--wa:#25d366;--cyan:#38d6ff;--violet:#8b6bff;--pink:#ff6bb3;--err:#ff6b7a}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.5 'Hind',system-ui,sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);overflow-x:hidden}
+.aurora{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.aurora i{position:absolute;width:55vmax;height:55vmax;border-radius:50%;filter:blur(90px);opacity:.3;animation:drift 22s ease-in-out infinite alternate}
+.aurora i:nth-child(1){background:var(--violet);top:-22vmax;left:-15vmax}
+.aurora i:nth-child(2){background:var(--cyan);bottom:-28vmax;right:-15vmax;animation-delay:-8s;opacity:.2}
+@keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 40px}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 30px 80px -34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.06)}
+h1{font:800 clamp(24px,6vw,34px)/1.1 'Unbounded',sans-serif;margin:0;letter-spacing:-.02em;background:linear-gradient(100deg,#fff 10%,var(--cyan) 60%,var(--wa));-webkit-background-clip:text;background-clip:text;color:transparent}
+.muted{color:var(--muted)}
+input,select{width:100%;font:inherit;color:var(--ink);background:rgba(7,11,22,.6);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+input:focus,select:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(56,214,255,.14)}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.btn{padding:10px 16px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);font-weight:500;transition:background .15s}
+.btn:hover{background:rgba(255,255,255,.1)}
+.btn.pri{border:0;color:#04210f;font-weight:700;background:linear-gradient(135deg,var(--wa),#7bf0a8)}
+.btn.del{color:var(--err);border-color:rgba(255,107,122,.35)}
+/* login */
+#login{max-width:400px;margin:12vh auto 0;padding:28px}
+#login h1{margin-bottom:6px}
+#login label{display:block;color:var(--muted);font-size:14px;margin:16px 0 6px}
+#login .btn{width:100%;margin-top:20px;padding:13px}
+.err{color:var(--err);min-height:22px;margin-top:12px;font-size:15px}
+/* dash */
+#dash{display:none}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.top .sub{font-size:14px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{padding:16px 18px}
+.stat b{display:block;font:800 30px/1.1 'Unbounded',sans-serif}
+.stat span{color:var(--muted);font-size:14px}
+.stat:nth-child(1) b{color:var(--cyan)}.stat:nth-child(2) b{color:var(--wa)}.stat:nth-child(3) b{color:var(--violet)}.stat:nth-child(4) b{color:var(--pink)}
+.tools{display:grid;grid-template-columns:1fr 160px auto;gap:10px;margin-bottom:14px}
+@media(max-width:600px){.tools{grid-template-columns:1fr 1fr}.tools input{grid-column:1/-1}}
+.list{display:grid;gap:10px}
+.item{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;padding:14px 16px}
+@media(max-width:600px){.item{grid-template-columns:44px 1fr}.item .acts{grid-column:1/-1}}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:800 15px 'Unbounded',sans-serif;background:linear-gradient(135deg,var(--violet),var(--cyan));color:#fff}
+.item h3{margin:0;font-size:17px;font-weight:600}
+.item .meta{color:var(--muted);font-size:14px;word-break:break-word}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tags em{font-style:normal;font-size:12.5px;padding:2px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.tags em.c{color:#9af0bd;border-color:rgba(37,211,102,.4)}.tags em.i{color:#9fe8ff;border-color:rgba(56,214,255,.4)}.tags em.f{color:#ffb3d9;border-color:rgba(255,107,179,.4)}
+.acts{display:flex;gap:8px}
+.empty{padding:40px 16px;text-align:center;color:var(--muted)}
+/* modal */
+dialog{width:min(720px,94vw);max-height:90vh;padding:0;border:1px solid var(--line);border-radius:20px;background:#0d1428;color:var(--ink);overflow:hidden}
+dialog::backdrop{background:rgba(3,6,14,.75);backdrop-filter:blur(4px)}
+.mh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.mh h2{margin:0;font-size:19px}
+.mb{padding:18px 20px;overflow:auto;max-height:calc(90vh - 150px)}
+.mb h4{margin:18px 0 8px;color:var(--muted);font-weight:500;font-size:14px}
+.mb h4:first-child{margin-top:0}
+pre.code{margin:0;padding:14px;background:#050813;border:1px solid var(--line);border-radius:12px;color:#cfe3ff;font:13.5px/1.6 'JetBrains Mono',monospace;overflow:auto;max-height:300px;white-space:pre}
+.imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.imgs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
+.files a{display:block;padding:10px 12px;margin-bottom:6px;border:1px solid var(--line);border-radius:10px;color:var(--cyan);text-decoration:none;word-break:break-all}
+.mf{display:flex;gap:8px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--line)}
+footer{text-align:center;margin-top:28px;color:var(--muted);font-size:14.5px}
+footer strong{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i></div>
+<main class="wrap">
+
+  <section id="login" class="glass">
+    <h1>Admin Login</h1>
+    <p class="muted" style="margin:0">Practical Share ka dashboard</p>
+    <label for="em">Email</label>
+    <input id="em" type="email" autocomplete="username" placeholder="admin@example.com">
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="Password">
+    <button class="btn pri" id="go">Login karo</button>
+    <div class="err" id="lerr" role="alert"></div>
+  </section>
+
+  <section id="dash">
+    <div class="top">
+      <div><h1>Practical Share</h1><div class="sub">Admin &middot; AVCOE &middot; <span id="who"></span></div></div>
+      <button class="btn" id="out">Logout</button>
+    </div>
+    <div class="stats">
+      <div class="stat glass"><b id="s1">0</b><span>Total shares</span></div>
+      <div class="stat glass"><b id="s2">0</b><span>Aaj ke shares</span></div>
+      <div class="stat glass"><b id="s3">0</b><span>Students</span></div>
+      <div class="stat glass"><b id="s4">0</b><span>Files + images</span></div>
+    </div>
+    <div class="tools">
+      <input id="q" type="search" placeholder="Naam, number ya practical dhundo...">
+      <select id="flt" aria-label="Filter"><option value="all">Sab</option><option value="code">Code wale</option><option value="img">Images wale</option><option value="file">Files wale</option></select>
+      <button class="btn" id="csv">CSV export</button>
+    </div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <footer>Developed by <strong>Arsalan Shaikh</strong> &middot; AI &amp; DS &middot; Division B &middot; AVCOE</footer>
+</main>
+
+<dialog id="dlg">
+  <div class="mh"><div><h2 id="dt"></h2><div class="muted" id="dm" style="font-size:14px"></div></div><button class="btn" id="dx" aria-label="Band karo">✕</button></div>
+  <div class="mb" id="db"></div>
+  <div class="mf" id="df"></div>
+</dialog>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, query, orderBy, limit, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ====== CONFIG ====== */
+const firebaseConfig = { apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ", authDomain: "multi-service-app-77dd8.firebaseapp.com", projectId: "multi-service-app-77dd8", storageBucket: "multi-service-app-77dd8.appspot.com", messagingSenderId: "123732555482", appId: "1:123732555482:web:ea47c825e0dbb504f597e3" };
+const ADMIN_EMAILS = []; // yahan apna admin email daalo, jaise ["you@gmail.com"]. Khali = koi bhi logged-in user
+/* ==================== */
+
+const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
+const $ = id => document.getElementById(id);
+let rows = [], unsub = null;
+
+const allowed = u => !ADMIN_EMAILS.length || ADMIN_EMAILS.map(e => e.toLowerCase()).includes((u.email || "").toLowerCase());
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const initials = n => (n || "?").trim().split(/\s+/).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+const when = r => r.createdAt?.toDate?.() || null;
+const fmt = d => d ? d.toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "abhi...";
+
+/* ---------- auth ---------- */
+async function login() {
+  $("lerr").textContent = "";
+  try { await signInWithEmailAndPassword(auth, $("em").value.trim(), $("pw").value); }
+  catch (e) { $("lerr").textContent = "Email ya password galat hai."; }
+}
+$("go").onclick = login;
+$("pw").onkeydown = e => { if (e.key === "Enter") login(); };
+$("out").onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, async u => {
+  if (unsub) { unsub(); unsub = null; }
+  if (u && !allowed(u)) { await signOut(auth); $("lerr").textContent = "Ye account admin nahi hai."; return; }
+  $("login").style.display = u ? "none" : "block";
+  $("dash").style.display = u ? "block" : "none";
+  if (!u) return;
+  $("who").textContent = u.email;
+  unsub = onSnapshot(query(collection(db, "practical_shares"), orderBy("createdAt", "desc"), limit(500)),
+    snap => { rows = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); },
+    err => { $("list").innerHTML = `<div class="empty glass">Data nahi aa raha: ${esc(err.message)}<br>Firestore rules check karo.</div>`; });
+});
+
+/* ---------- render ---------- */
+const hasImg = r => (r.images || []).length > 0, hasFile = r => (r.files || []).length > 0, hasCode = r => !!r.code;
+
+function render() {
+  const today = new Date().toDateString();
+  $("s1").textContent = rows.length;
+  $("s2").textContent = rows.filter(r => when(r)?.toDateString() === today).length;
+  $("s3").textContent = new Set(rows.map(r => r.studentNumber)).size;
+  $("s4").textContent = rows.reduce((n, r) => n + (r.images || []).length + (r.files || []).length, 0);
+
+  const q = $("q").value.trim().toLowerCase(), f = $("flt").value;
+  const out = rows.filter(r =>
+    (f === "all" || (f === "code" && hasCode(r)) || (f === "img" && hasImg(r)) || (f === "file" && hasFile(r))) &&
+    (!q || `${r.studentName} ${r.studentNumber} ${r.title}`.toLowerCase().includes(q)));
+
+  $("list").innerHTML = out.length ? out.map(r => `
+    <article class="item glass">
+      <div class="av">${esc(initials(r.studentName))}</div>
+      <div>
+        <h3>${esc(r.studentName)} <span class="muted" style="font-weight:400">&middot; ${esc(r.studentNumber)}</span></h3>
+        <div class="meta">${esc(r.title || "Bina naam ka practical")} &middot; ${fmt(when(r))}</div>
+        <div class="tags">${hasCode(r) ? '<em class="c">Code</em>' : ""}${hasImg(r) ? `<em class="i">${r.images.length} image</em>` : ""}${hasFile(r) ? `<em class="f">${r.files.length} file</em>` : ""}</div>
+      </div>
+      <div class="acts"><button class="btn pri" data-v="${r.id}">Dekho</button><button class="btn del" data-d="${r.id}">Delete</button></div>
+    </article>`).join("") : `<div class="empty glass">Koi share nahi mila.</div>`;
+}
+$("q").oninput = render; $("flt").onchange = render;
+
+$("list").onclick = async e => {
+  const v = e.target.closest("[data-v]"), d = e.target.closest("[data-d]");
+  if (v) openView(rows.find(r => r.id === v.dataset.v));
+  if (d && confirm("Ye record delete kar du? (WhatsApp pe gaya message wapas nahi hoga)")) {
+    try { await deleteDoc(doc(db, "practical_shares", d.dataset.d)); } catch (err) { alert("Delete nahi hua: " + err.message); }
+  }
+};
+
+/* ---------- detail ---------- */
+function openView(r) {
+  if (!r) return;
+  $("dt").textContent = r.title || "Bina naam ka practical";
+  $("dm").textContent = `${r.studentName} · ${r.studentNumber} · ${fmt(when(r))}`;
+  $("db").innerHTML =
+    (hasCode(r) ? `<h4>Code</h4><pre class="code">${esc(r.code)}</pre>` : "") +
+    (hasImg(r) ? `<h4>Images</h4><div class="imgs">${r.images.map(u => `<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="" loading="lazy"></a>`).join("")}</div>` : "") +
+    (hasFile(r) ? `<h4>Files</h4><div class="files">${r.files.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.name)}</a>`).join("")}</div>` : "");
+  const num = String(r.studentNumber || "").replace(/\D/g, "");
+  $("df").innerHTML = (hasCode(r) ? `<button class="btn" id="cp">Code copy karo</button>` : "") + `<a class="btn" style="text-decoration:none" href="https://wa.me/${num}" target="_blank" rel="noopener">WhatsApp kholo</a>`;
+  const cp = $("cp");
+  if (cp) cp.onclick = async () => { try { await navigator.clipboard.writeText(r.code); cp.textContent = "Copy ho gaya ✓"; } catch { cp.textContent = "Copy nahi hua"; } };
+  $("dlg").showModal();
+}
+$("dx").onclick = () => $("dlg").close();
+$("dlg").addEventListener("click", e => { if (e.target === $("dlg")) $("dlg").close(); });
+
+/* ---------- csv ---------- */
+$("csv").onclick = () => {
+  const cell = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const lines = [["Naam", "Number", "Practical", "Time", "Code?", "Images", "Files"].map(cell).join(",")].concat(
+    rows.map(r => [r.studentName, r.studentNumber, r.title, fmt(when(r)), hasCode(r) ? "Haan" : "Nahi", (r.images || []).length, (r.files || []).length].map(cell).join(",")));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" }));
+  a.download = "practical-shares.csv"; a.click(); URL.revokeObjectURL(a.href);
+};
+</script>
+</body>
+</html>

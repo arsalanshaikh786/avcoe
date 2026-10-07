@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Practical Share – Code, Screenshot & Files seedha WhatsApp pe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=JetBrains+Mono:wght@400;500&family=Hind:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070b16;--ink:#e8eefc;--muted:#8a97b8;--glass:rgba(18,26,48,.62);--line:rgba(140,160,220,.18);--wa:#25d366;--wa2:#12a150;--cyan:#38d6ff;--violet:#8b6bff;--pink:#ff6bb3;--err:#ff6b7a}
+*{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.55 'Hind',system-ui,sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);overflow-x:hidden}
+.aurora{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.aurora i{position:absolute;width:55vmax;height:55vmax;border-radius:50%;filter:blur(90px);opacity:.38;animation:drift 22s ease-in-out infinite alternate}
+.aurora i:nth-child(1){background:var(--violet);top:-20vmax;left:-15vmax}
+.aurora i:nth-child(2){background:var(--cyan);bottom:-25vmax;right:-15vmax;animation-delay:-8s;opacity:.28}
+.aurora i:nth-child(3){background:var(--pink);top:30%;left:45%;width:30vmax;height:30vmax;opacity:.16;animation-delay:-14s}
+@keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+.wrap{max-width:700px;margin:0 auto;padding:34px 16px 40px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--line);border-radius:99px;background:var(--glass);color:var(--muted);font-size:13.5px;backdrop-filter:blur(8px)}
+.badge b{width:8px;height:8px;border-radius:50%;background:var(--wa);box-shadow:0 0 0 0 var(--wa);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+h1{font:800 clamp(34px,9vw,58px)/1.02 'Unbounded',sans-serif;margin:18px 0 12px;letter-spacing:-.03em;background:linear-gradient(100deg,#fff 10%,var(--cyan) 55%,var(--wa) 95%);-webkit-background-clip:text;background-clip:text;color:transparent;animation:rise .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+.sub{color:var(--muted);margin:0 0 26px;max-width:48ch;font-size:17px}
+.dev{display:flex;align-items:center;gap:16px;margin:0 0 20px;padding:16px 18px;border-radius:20px;border:1px solid transparent;background:linear-gradient(var(--bgc),var(--bgc)) padding-box,linear-gradient(120deg,var(--cyan),var(--violet),var(--pink)) border-box;--bgc:#0d1428;box-shadow:0 20px 50px -22px rgba(139,107,255,.7);animation:rise .8s .15s cubic-bezier(.2,.8,.2,1) both}
+.avatar{flex:none;width:62px;height:62px;border-radius:50%;padding:3px;background:conic-gradient(from 0deg,var(--cyan),var(--violet),var(--pink),var(--cyan));animation:spin 8s linear infinite}
+.avatar span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:#0d1428;font:800 20px 'Unbounded',sans-serif;color:#fff;animation:spin 8s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.who small{display:block;color:var(--muted);font-size:13px;line-height:1.2}
+.who strong{display:block;font:800 clamp(21px,5.6vw,30px)/1.15 'Unbounded',sans-serif;letter-spacing:-.02em;background:linear-gradient(90deg,#fff,var(--cyan) 60%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips em{font-style:normal;font-size:12.5px;font-weight:500;padding:3px 11px;border-radius:99px;background:rgba(139,107,255,.16);border:1px solid rgba(139,107,255,.4);color:#d9d0ff}
+.chips em:first-child{background:rgba(37,211,102,.14);border-color:rgba(37,211,102,.45);color:#9af0bd}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:22px;padding:22px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 30px 80px -30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.row{grid-template-columns:1fr}.card{padding:16px}}
+label{display:block;font:500 14px 'Hind',sans-serif;color:var(--muted);margin:18px 0 7px}
+label i{color:var(--pink);font-style:normal}
+label span{opacity:.7}
+input{width:100%;font:inherit;color:var(--ink);background:rgba(7,11,22,.6);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:border-color .2s,box-shadow .2s}
+input::placeholder,textarea::placeholder{color:#55618196}
+input:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(56,214,255,.14)}
+button:focus-visible,.drop:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.editor{border:1px solid var(--line);border-radius:14px;background:#050813;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.editor:focus-within{border-color:var(--violet);box-shadow:0 0 0 4px rgba(139,107,255,.16)}
+.bar2{display:flex;align-items:center;gap:7px;padding:10px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--line);color:var(--muted);font:12.5px 'JetBrains Mono',monospace}
+.bar2 s{width:11px;height:11px;border-radius:50%;background:#ff5f57;text-decoration:none}
+.bar2 s:nth-child(2){background:#febc2e}.bar2 s:nth-child(3){background:#28c840}
+.bar2 em{margin-left:auto;font-style:normal}
+.ed{display:flex;max-height:340px}
+.gut{margin:0;padding:12px 10px 12px 14px;text-align:right;color:#3d4a6b;font:400 13.5px/1.6 'JetBrains Mono',monospace;user-select:none;overflow:hidden;min-width:44px;border-right:1px solid var(--line)}
+.ed textarea{flex:1;min-height:210px;resize:none;border:0;background:transparent;color:#cfe3ff;font:400 13.5px/1.6 'JetBrains Mono',monospace;padding:12px 14px;white-space:pre;overflow:auto;tab-size:4;outline:0}
+.drop{border:1.5px dashed rgba(140,160,220,.35);border-radius:14px;padding:24px;text-align:center;color:var(--muted);cursor:pointer;transition:all .2s;background:rgba(255,255,255,.02)}
+.drop:hover,.drop.over{border-color:var(--cyan);background:rgba(56,214,255,.07);color:var(--ink)}
+.drop svg{display:block;margin:0 auto 8px;color:var(--cyan)}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;margin-top:12px}
+.thumb{position:relative;aspect-ratio:1;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#050813}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px;height:100%;text-align:center;font-size:12px;color:var(--muted);word-break:break-all}.chip b{font:700 13px 'JetBrains Mono',monospace;color:var(--cyan);background:rgba(56,214,255,.12);border-radius:6px;padding:3px 7px}.chip span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.thumb button{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:16px;line-height:1;cursor:pointer;padding:0}
+.send{position:relative;overflow:hidden;margin-top:24px;width:100%;padding:16px;display:flex;align-items:center;justify-content:center;gap:10px;font:700 17px 'Hind',sans-serif;color:#04210f;background:linear-gradient(135deg,var(--wa),#7bf0a8);border:0;border-radius:14px;cursor:pointer;box-shadow:0 14px 34px -10px rgba(37,211,102,.6);transition:transform .15s,box-shadow .15s}
+.send::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);animation:shine 3.6s ease-in-out infinite}
+@keyframes shine{40%,100%{transform:translateX(120%)}}
+.send:hover{transform:translateY(-2px)}
+.send:active{transform:translateY(1px)}
+.send:disabled{opacity:.65;cursor:wait}
+.send.done svg{animation:fly .7s ease-out}
+@keyframes fly{40%{transform:translate(30px,-18px) scale(.6);opacity:0}41%{transform:translate(-30px,18px)}to{transform:none;opacity:1}}
+.status{margin-top:14px;min-height:22px;font-size:15px;color:var(--muted)}
+.status.err{color:var(--err)}.status.ok{color:var(--wa);font-weight:500}
+.bar{height:5px;background:rgba(255,255,255,.08);border-radius:3px;margin-top:14px;overflow:hidden;display:none}
+.bar b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--wa));transition:width .3s}
+footer{text-align:center;margin-top:28px;color:var(--muted);font-size:14.5px}
+footer strong{font-size:16px;background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+@media(prefers-reduced-motion:reduce){*,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<main class="wrap">
+  <span class="badge"><b></b>AVCOE &middot; Practical sharing</span>
+  <h1>Practical Share</h1>
+  <p class="sub">Code aur screenshot likho, student ka naam aur number daalo. Seedha uske WhatsApp pe pahunch jayega.</p>
+
+  <section class="dev" aria-label="Developer">
+    <div class="avatar"><span>AS</span></div>
+    <div class="who">
+      <small>Developed by</small>
+      <strong>Arsalan Shaikh</strong>
+      <div class="chips"><em>AVCOE</em><em>AI &amp; DS</em><em>Division B</em></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="row">
+      <div>
+        <label for="sname" style="margin-top:0">Student ka naam <i>*</i></label>
+        <input id="sname" type="text" autocomplete="off" placeholder="Jaise: Rahul Patil">
+      </div>
+      <div>
+        <label for="snum" style="margin-top:0">WhatsApp number <i>*</i></label>
+        <input id="snum" type="tel" inputmode="numeric" autocomplete="off" placeholder="10 digit number" maxlength="15">
+      </div>
+    </div>
+
+    <label for="title">Practical ka naam <span>(optional)</span></label>
+    <input id="title" type="text" autocomplete="off" placeholder="Jaise: PPS Practical 5 – Fibonacci">
+
+    <label for="code">Code <span>(optional)</span></label>
+    <div class="editor">
+      <div class="bar2"><s></s><s></s><s></s><em id="lc">0 lines</em></div>
+      <div class="ed"><pre class="gut" id="gut" aria-hidden="true">1</pre><textarea id="code" spellcheck="false" placeholder="Yahan code paste karo..."></textarea></div>
+    </div>
+
+    <label>Screenshots aur files <span>(optional, ek se zyada chalenge)</span></label>
+    <div class="drop" id="drop" tabindex="0" role="button" aria-label="Screenshot ya file chuno">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>
+      Screenshot ya file (PDF, Word, ZIP, PPT...) yahan drop karo ya tap karke chuno<br><small>Ctrl+V se paste bhi chalta hai &middot; max 15 MB har file</small>
+    </div>
+    <input id="files" type="file" multiple hidden>
+    <div class="thumbs" id="thumbs"></div>
+
+    <button class="send" id="send"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 11.3 20.7 3.6c.9-.4 1.8.5 1.4 1.4L14.4 21.2c-.4.9-1.7.8-2-.1l-2-6.1-6.1-2c-.9-.3-1-1.6-.1-1.9zm8.2 2.2 1.4 4.3 4.6-10.6-10.6 4.6 3.4 1.1 3.7-3.7z"/></svg><span id="sendtxt">WhatsApp pe bhejo</span></button>
+    <div class="bar" id="bar"><b id="barfill"></b></div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <footer>Made with ♥ for AVCOE students by <strong>Arsalan Shaikh</strong><br>AI &amp; DS &middot; Division B</footer>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ====== CONFIG ====== */
+const firebaseConfig = { apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ", authDomain: "multi-service-app-77dd8.firebaseapp.com", projectId: "multi-service-app-77dd8", storageBucket: "multi-service-app-77dd8.appspot.com", messagingSenderId: "123732555482", appId: "1:123732555482:web:ea47c825e0dbb504f597e3" };
+const CLOUDINARY = { cloudName: "dbirgrdbp", uploadPreset: "ml_default" }; // preset yahan daalo, ya page ke "Cloudinary setting" me
+const getPreset = () => CLOUDINARY.uploadPreset;
+const ULTRA = { base: "https://api.ultramsg.com/instance192669", token: "xnbaeejigdwjjij1" };
+const CREDIT = "_Developed by Arsalan Shaikh • AI & DS, Div B • AVCOE_";
+/* ==================== */
+
+const db = getFirestore(initializeApp(firebaseConfig));
+const $ = id => document.getElementById(id);
+const st = $("status"), bar = $("bar"), fill = $("barfill"), sendBtn = $("send");
+let images = [];
+const ta = $("code"), gut = $("gut");
+function syncGutter() {
+  const n = ta.value ? ta.value.split("\n").length : 0;
+  gut.textContent = Array.from({ length: Math.max(n, 1) }, (_, i) => i + 1).join("\n");
+  $("lc").textContent = n + (n === 1 ? " line" : " lines");
+}
+ta.addEventListener("input", syncGutter);
+ta.addEventListener("scroll", () => { gut.scrollTop = ta.scrollTop; });
+syncGutter();
+
+function say(msg, cls = "") { st.textContent = msg; st.className = "status " + cls; }
+function progress(p) { bar.style.display = "block"; fill.style.width = p + "%"; }
+
+function normalizeNumber(raw) {
+  const d = raw.replace(/\D/g, "");
+  if (d.length === 10) return "91" + d;
+  if (d.length === 12 && d.startsWith("91")) return d;
+  if (d.length === 11 && d.startsWith("0")) return "91" + d.slice(1);
+  return null;
+}
+
+/* ---------- images ---------- */
+const MAX_MB = 15;
+const isImg = f => f.type.startsWith("image/");
+function addFiles(list) {
+  [...list].forEach(f => {
+    if (f.size > MAX_MB * 1024 * 1024) return say(`"${f.name}" ${MAX_MB} MB se badi hai, chhoti file chuno.`, "err");
+    images.push(f);
+  });
+  renderThumbs();
+}
+function renderThumbs() {
+  const box = $("thumbs"); box.innerHTML = "";
+  images.forEach((f, i) => {
+    const d = document.createElement("div"); d.className = "thumb";
+    let img;
+    if (isImg(f)) { img = document.createElement("img"); img.src = URL.createObjectURL(f); img.alt = f.name; }
+    else { img = document.createElement("div"); img.className = "chip"; const ext = document.createElement("b"); ext.textContent = (f.name.split(".").pop() || "file").slice(0, 5).toUpperCase(); const nm = document.createElement("span"); nm.textContent = f.name; img.append(ext, nm); }
+    const x = document.createElement("button"); x.type = "button"; x.textContent = "×"; x.setAttribute("aria-label", "Hata do");
+    x.onclick = () => { images.splice(i, 1); renderThumbs(); };
+    d.append(img, x); box.append(d);
+  });
+}
+const drop = $("drop"), picker = $("files");
+drop.onclick = () => picker.click();
+drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); picker.click(); } };
+picker.onchange = () => { addFiles(picker.files); picker.value = ""; };
+["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => addFiles(e.dataTransfer.files));
+document.addEventListener("paste", e => { const f = [...(e.clipboardData?.files || [])]; if (f.length) addFiles(f); });
+
+/* tab key inside code box */
+$("code").addEventListener("keydown", e => {
+  if (e.key === "Tab") { e.preventDefault(); const t = e.target, s = t.selectionStart; t.setRangeText("    ", s, t.selectionEnd, "end"); t.dispatchEvent(new Event("input")); }
+});
+
+/* ---------- services ---------- */
+async function uploadToCloudinary(file) {
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", getPreset());
+  const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY.cloudName}/auto/upload`, { method: "POST", body: fd });
+  const j = await r.json();
+  if (!r.ok || !j.secure_url) throw new Error("Cloudinary upload fail: " + (j.error?.message || r.status));
+  return j.secure_url;
+}
+
+async function ultra(endpoint, params) {
+  const r = await fetch(`${ULTRA.base}/messages/${endpoint}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ token: ULTRA.token, ...params })
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.error) throw new Error("WhatsApp send fail: " + (typeof j.error === "string" ? j.error : JSON.stringify(j.error || r.status)));
+  return j;
+}
+
+function chunk(text, size = 3500) {
+  const out = []; let rest = text;
+  while (rest.length > size) {
+    let cut = rest.lastIndexOf("\n", size); if (cut < size / 2) cut = size;
+    out.push(rest.slice(0, cut)); rest = rest.slice(cut);
+  }
+  if (rest.trim()) out.push(rest);
+  return out;
+}
+
+/* ---------- send ---------- */
+sendBtn.onclick = async () => {
+  const name = $("sname").value.trim();
+  const to = normalizeNumber($("snum").value);
+  const title = $("title").value.trim();
+  const code = $("code").value.replace(/\s+$/, "");
+
+  if (!name) return say("Student ka naam daalna zaroori hai.", "err");
+  if (!to) return say("Sahi WhatsApp number daalo (10 digit, ya 91 ke saath).", "err");
+  if (!code && !images.length) return say("Code likho ya kam se kam ek screenshot chuno.", "err");
+
+  sendBtn.disabled = true; bar.style.display = "none";
+  const total = images.length + (code ? 1 : 0) + 1; let done = 0;
+  const step = () => progress(Math.round(++done / total * 100));
+  const header = `📚 *${title || "Practical"}*\nNamaste ${name} 👋\n`;
+
+  try {
+    const urls = [];
+    for (let i = 0; i < images.length; i++) {
+      say(`File ${i + 1}/${images.length} upload ho rahi hai...`);
+      urls.push({ url: await uploadToCloudinary(images[i]), name: images[i].name, img: isImg(images[i]) }); step();
+    }
+
+    if (code) {
+      say("Code bhej rahe hain...");
+      const parts = chunk(code);
+      for (let i = 0; i < parts.length; i++) {
+        const head = i === 0 ? header + "\n" : `(Part ${i + 1}/${parts.length})\n`;
+        const foot = i === parts.length - 1 && !urls.length ? "\n\n" + CREDIT : "";
+        await ultra("chat", { to, body: `${head}\`\`\`${parts[i]}\`\`\`${foot}` });
+      }
+      step();
+    }
+
+    for (let i = 0; i < urls.length; i++) {
+      say(`File ${i + 1}/${urls.length} bhej rahe hain...`);
+      const u = urls[i];
+      const cap = ((i === 0 && !code ? header + "\n" : "") + (urls.length > 1 ? `${i + 1}/${urls.length}` : "") + (i === urls.length - 1 ? `\n${CREDIT}` : "")).trim();
+      if (u.img) await ultra("image", { to, image: u.url, caption: cap });
+      else await ultra("document", { to, document: u.url, filename: u.name, caption: cap });
+    }
+
+    say("Record save ho raha hai...");
+    await addDoc(collection(db, "practical_shares"), {
+      studentName: name, studentNumber: "+" + to, title, code, images: urls.filter(u => u.img).map(u => u.url), files: urls.filter(u => !u.img).map(u => ({ name: u.name, url: u.url })),
+      createdAt: serverTimestamp()
+    }).catch(err => console.warn("Firestore save fail:", err));
+    progress(100);
+
+    say(`✅ ${name} ke WhatsApp pe bhej diya!`, "ok");
+    $("code").value = ""; syncGutter(); $("title").value = "";
+    sendBtn.classList.add("done"); $("sendtxt").textContent = "Bhej diya ✓"; setTimeout(() => { sendBtn.classList.remove("done"); $("sendtxt").textContent = "WhatsApp pe bhejo"; }, 2500); images = []; renderThumbs();
+  } catch (e) {
+    console.error(e); say(e.message || "Kuch gadbad ho gayi, dobara try karo.", "err");
+  } finally { sendBtn.disabled = false; }
+};
+</script>
+</body>
+</html>
