@@ -70,6 +70,15 @@ pre.code{margin:0;padding:14px;background:#050813;border:1px solid var(--line);b
 .imgs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
 .files a{display:block;padding:10px 12px;margin-bottom:6px;border:1px solid var(--line);border-radius:10px;color:var(--cyan);text-decoration:none;word-break:break-all}
 .mf{display:flex;gap:8px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--line)}
+.sel{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer}
+.sel:hover{background:rgba(255,255,255,.04)}
+.sel input{width:20px;height:20px;accent-color:var(--wa);flex:none;padding:0}
+.sel div{flex:1;min-width:0}.sel b{font-weight:600}.sel small{display:block;color:var(--muted)}
+textarea.note{width:100%;min-height:90px;resize:vertical;font:inherit;color:var(--ink);background:rgba(7,11,22,.6);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+textarea.note:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(56,214,255,.14)}
+.pv{white-space:pre-wrap;font-size:14px;color:var(--muted);background:#050813;border:1px solid var(--line);border-radius:12px;padding:12px;max-height:150px;overflow:auto}
+.log{min-height:22px;font-size:14.5px;color:var(--muted);margin-top:10px;max-height:110px;overflow:auto}
+.log .ok{color:var(--wa)}.log .bad{color:var(--err)}
 footer{text-align:center;margin-top:28px;color:var(--muted);font-size:14.5px}
 footer strong{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -93,7 +102,7 @@ footer strong{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-
   <section id="dash">
     <div class="top">
       <div><h1>Practical Share</h1><div class="sub">Admin &middot; AVCOE &middot; <span id="who"></span></div></div>
-      <button class="btn" id="out">Logout</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" id="snd">Link bhejo</button><button class="btn" id="mig">Purane records jodo</button><button class="btn" id="out">Logout</button></div>
     </div>
     <div class="stats">
       <div class="stat glass"><b id="s1">0</b><span>Total shares</span></div>
@@ -118,13 +127,31 @@ footer strong{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-
   <div class="mf" id="df"></div>
 </dialog>
 
+<dialog id="sd">
+  <div class="mh"><div><h2>Students ko HD link bhejo</h2><div class="muted" style="font-size:14px">Select karo, note likho, WhatsApp pe link chala jayega</div></div><button class="btn" id="sx" aria-label="Band karo">✕</button></div>
+  <div class="mb">
+    <h4>Students (<span id="sc">0</span> selected)</h4>
+    <div style="display:flex;gap:8px;margin-bottom:10px"><input id="sq" type="search" placeholder="Dhundo..."><button class="btn" id="sall">Sab select</button></div>
+    <div id="sl"></div>
+    <h4>Note <span style="opacity:.7">({naam} likhoge to student ka naam aa jayega)</span></h4>
+    <textarea class="note" id="note">Aapke saare practicals ka HD download link neeche hai. Yahan se code, screenshots aur files sab download kar sakte ho.</textarea>
+    <h4>Message preview</h4>
+    <div class="pv" id="pv"></div>
+    <div class="log" id="log" role="status" aria-live="polite"></div>
+  </div>
+  <div class="mf"><button class="btn pri" id="dosend">WhatsApp pe bhejo</button></div>
+</dialog>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, query, orderBy, limit, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, query, orderBy, limit, onSnapshot, deleteDoc, doc, getDoc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ====== CONFIG ====== */
 const firebaseConfig = { apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ", authDomain: "multi-service-app-77dd8.firebaseapp.com", projectId: "multi-service-app-77dd8", storageBucket: "multi-service-app-77dd8.appspot.com", messagingSenderId: "123732555482", appId: "1:123732555482:web:ea47c825e0dbb504f597e3" };
+const SALT = "avcoe-aids-b-2026"; // index.html wale SALT se EXACT same hona chahiye
+const ULTRA = { base: "https://api.ultramsg.com/instance192669", token: "xnbaeejigdwjjij1" };
+const CREDIT = "_Developed by Arsalan Shaikh • AI & DS, Div B • AVCOE_";
 const ADMIN_EMAILS = []; // yahan apna admin email daalo, jaise ["you@gmail.com"]. Khali = koi bhi logged-in user
 /* ==================== */
 
@@ -206,13 +233,105 @@ function openView(r) {
     (hasImg(r) ? `<h4>Images</h4><div class="imgs">${r.images.map(u => `<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="" loading="lazy"></a>`).join("")}</div>` : "") +
     (hasFile(r) ? `<h4>Files</h4><div class="files">${r.files.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.name)}</a>`).join("")}</div>` : "");
   const num = String(r.studentNumber || "").replace(/\D/g, "");
-  $("df").innerHTML = (hasCode(r) ? `<button class="btn" id="cp">Code copy karo</button>` : "") + `<a class="btn" style="text-decoration:none" href="https://wa.me/${num}" target="_blank" rel="noopener">WhatsApp kholo</a>`;
+  $("df").innerHTML = (hasCode(r) ? `<button class="btn" id="cp">Code copy karo</button>` : "") + `<button class="btn" id="lk">Student ka link copy karo</button><a class="btn" style="text-decoration:none" href="https://wa.me/${num}" target="_blank" rel="noopener">WhatsApp kholo</a>`;
   const cp = $("cp");
   if (cp) cp.onclick = async () => { try { await navigator.clipboard.writeText(r.code); cp.textContent = "Copy ho gaya ✓"; } catch { cp.textContent = "Copy nahi hua"; } };
+  $("lk").onclick = async () => { const b = $("lk"); try { await navigator.clipboard.writeText(await linkFor(num)); b.textContent = "Link copy ho gaya ✓"; } catch { b.textContent = "Copy nahi hua"; } };
   $("dlg").showModal();
 }
 $("dx").onclick = () => $("dlg").close();
 $("dlg").addEventListener("click", e => { if (e.target === $("dlg")) $("dlg").close(); });
+
+/* ---------- student links ---------- */
+async function tokenFor(num) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(num + "|" + SALT));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("").slice(0, 32);
+}
+const linkFor = async num => { const u = new URL("my.html", location.href); u.search = "?t=" + await tokenFor(num); return u.href; };
+const keyOf = it => JSON.stringify([it.title || "", it.code || "", it.images || [], (it.files || []).map(f => f.url)]);
+
+const numOf = r => String(r.studentNumber || "").replace(/\D/g, "");
+const groups = () => { const by = {}; rows.forEach(r => { const n = numOf(r); if (n) (by[n] ||= []).push(r); }); return by; };
+
+// is student ke saare purane records ko uske portal me jodta hai (duplicate nahi). Kitne naye jude wo return karta hai.
+async function syncStudent(num, list) {
+  const ref = doc(db, "portal", await tokenFor(num));
+  const snap = await getDoc(ref);
+  const have = new Set((snap.exists() ? snap.data().items || [] : []).map(keyOf));
+  const fresh = list
+    .map(r => ({ title: r.title || "", code: r.code || "", images: r.images || [], files: r.files || [], at: when(r)?.getTime() || Date.now() }))
+    .filter(it => !have.has(keyOf(it)));
+  if (fresh.length) await setDoc(ref, { studentName: list[0].studentName, studentNumber: "+" + num, items: arrayUnion(...fresh) }, { merge: true });
+  return fresh.length;
+}
+
+$("mig").onclick = async () => {
+  if (!confirm("Purane sab shares har student ke link me jod du? (Duplicate nahi banenge, dobara chalaoge to bhi safe hai)")) return;
+  const btn = $("mig"); btn.disabled = true;
+  const by = groups(), all = Object.entries(by);
+  let students = 0, added = 0, i = 0;
+  try {
+    for (const [num, list] of all) {
+      btn.textContent = `Jod rahe hain... ${++i}/${all.length}`;
+      const n = await syncStudent(num, list);
+      if (n) { added += n; students++; }
+    }
+    alert(added ? `${students} students ke ${added} purane practicals jod diye.` : "Sab pehle se juda hua hai.");
+  } catch (e) { alert("Error: " + e.message + "\nFirestore rules me 'portal' ka block check karo."); }
+  btn.disabled = false; btn.textContent = "Purane records jodo";
+};
+
+/* ---------- link bhejo ---------- */
+let studs = [], picked = new Set();
+const buildMsg = (name, link) => `Namaste ${name} 👋\n\n${($("note").value.trim() || "Aapke practicals ka link:").replace(/\{naam\}/gi, name)}\n\n🔗 Aapke saare practicals (HD download):\n${link}\n\n${CREDIT}`;
+function renderStuds() {
+  const q = $("sq").value.trim().toLowerCase();
+  $("sl").innerHTML = studs.filter(x => !q || `${x.name} ${x.num}`.toLowerCase().includes(q)).map(x => `
+    <label class="sel"><input type="checkbox" data-n="${x.num}" ${picked.has(x.num) ? "checked" : ""}>
+    <div><b>${esc(x.name)}</b><small>+${esc(x.num)} &middot; ${x.list.length} share${x.list.length === 1 ? "" : "s"}</small></div></label>`).join("") || '<div class="empty">Koi student nahi.</div>';
+  $("sc").textContent = picked.size;
+  const first = studs.find(x => picked.has(x.num));
+  $("pv").textContent = buildMsg(first ? first.name : "Rahul", location.origin ? new URL("my.html", location.href).href + "?t=…" : "…");
+}
+$("snd").onclick = () => {
+  studs = Object.entries(groups()).map(([num, list]) => ({ num, list, name: list[0].studentName })).sort((a, b) => a.name.localeCompare(b.name));
+  picked = new Set(); $("log").innerHTML = ""; renderStuds(); $("sd").showModal();
+};
+$("sq").oninput = renderStuds; $("note").oninput = renderStuds;
+$("sl").onchange = e => { const n = e.target.dataset.n; if (!n) return; e.target.checked ? picked.add(n) : picked.delete(n); renderStuds(); };
+$("sall").onclick = () => {
+  const q = $("sq").value.trim().toLowerCase();
+  const vis = studs.filter(x => !q || `${x.name} ${x.num}`.toLowerCase().includes(q));
+  const allOn = vis.every(x => picked.has(x.num));
+  vis.forEach(x => allOn ? picked.delete(x.num) : picked.add(x.num)); renderStuds();
+  $("sall").textContent = allOn ? "Sab select" : "Sab hatao";
+};
+$("sx").onclick = () => $("sd").close();
+
+$("dosend").onclick = async () => {
+  const chosen = studs.filter(x => picked.has(x.num));
+  if (!chosen.length) { $("log").innerHTML = '<span class="bad">Pehle kam se kam ek student select karo.</span>'; return; }
+  if (!confirm(`${chosen.length} students ko WhatsApp pe link bhej du?`)) return;
+  const btn = $("dosend"), log = $("log"); btn.disabled = true; log.innerHTML = "";
+  let ok = 0;
+  for (const [i, x] of chosen.entries()) {
+    btn.textContent = `Bhej rahe hain... ${i + 1}/${chosen.length}`;
+    try {
+      await syncStudent(x.num, x.list);
+      const r = await fetch(`${ULTRA.base}/messages/chat`, {
+        method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ token: ULTRA.token, to: "+" + x.num, body: buildMsg(x.name, await linkFor(x.num)) })
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || j.error) throw new Error(typeof j.error === "string" ? j.error : "send fail");
+      ok++; log.insertAdjacentHTML("beforeend", `<div class="ok">✓ ${esc(x.name)}</div>`);
+    } catch (e) { log.insertAdjacentHTML("beforeend", `<div class="bad">✗ ${esc(x.name)}: ${esc(e.message)}</div>`); }
+    log.scrollTop = log.scrollHeight;
+    if (i < chosen.length - 1) await new Promise(r => setTimeout(r, 1500)); // WhatsApp ban se bachne ke liye gap
+  }
+  log.insertAdjacentHTML("beforeend", `<div><b>${ok}/${chosen.length} students ko bhej diya.</b></div>`);
+  btn.disabled = false; btn.textContent = "WhatsApp pe bhejo";
+};
 
 /* ---------- csv ---------- */
 $("csv").onclick = () => {
