@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mere Practicals – AVCOE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=JetBrains+Mono:wght@400;500&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070b16;--ink:#e8eefc;--muted:#8a97b8;--glass:rgba(18,26,48,.66);--line:rgba(140,160,220,.18);--wa:#25d366;--cyan:#38d6ff;--violet:#8b6bff;--pink:#ff6bb3}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.55 'Hind',system-ui,sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);overflow-x:hidden}
+.aurora{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.aurora i{position:absolute;width:55vmax;height:55vmax;border-radius:50%;filter:blur(90px);opacity:.34;animation:drift 22s ease-in-out infinite alternate}
+.aurora i:nth-child(1){background:var(--violet);top:-20vmax;left:-15vmax}
+.aurora i:nth-child(2){background:var(--cyan);bottom:-25vmax;right:-15vmax;animation-delay:-8s;opacity:.24}
+@keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+.wrap{max-width:720px;margin:0 auto;padding:30px 16px 40px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--line);border-radius:99px;background:var(--glass);color:var(--muted);font-size:13.5px}
+.badge b{width:8px;height:8px;border-radius:50%;background:var(--wa)}
+h1{font:800 clamp(28px,8vw,46px)/1.08 'Unbounded',sans-serif;margin:16px 0 8px;letter-spacing:-.03em;background:linear-gradient(100deg,#fff 10%,var(--cyan) 55%,var(--wa) 95%);-webkit-background-clip:text;background-clip:text;color:transparent;word-break:break-word}
+.sub{color:var(--muted);margin:0 0 24px}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 30px 80px -34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.06)}
+.card{padding:18px;margin-bottom:16px;animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.card h2{margin:0 0 2px;font-size:19px}
+.card .when{color:var(--muted);font-size:14px;margin-bottom:14px}
+h4{margin:16px 0 8px;color:var(--muted);font-weight:500;font-size:14px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);font:500 14.5px 'Hind',sans-serif;text-decoration:none;cursor:pointer;transition:background .15s}
+.btn:hover{background:rgba(255,255,255,.11)}
+.btn.pri{border:0;color:#04210f;font-weight:600;background:linear-gradient(135deg,var(--wa),#7bf0a8)}
+.btn:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.editor{border:1px solid var(--line);border-radius:14px;background:#050813;overflow:hidden}
+.bar2{display:flex;align-items:center;gap:7px;padding:9px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--line)}
+.bar2 s{width:11px;height:11px;border-radius:50%;background:#ff5f57;text-decoration:none}
+.bar2 s:nth-child(2){background:#febc2e}.bar2 s:nth-child(3){background:#28c840}
+.bar2 span{margin-left:auto;display:flex;gap:8px}
+.bar2 .btn{padding:4px 11px;font-size:13px;border-radius:9px}
+pre{margin:0;padding:14px;color:#cfe3ff;font:13.5px/1.6 'JetBrains Mono',monospace;overflow:auto;max-height:320px;white-space:pre}
+.imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.im{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#050813}
+.im img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;cursor:zoom-in}
+.im .btn{width:calc(100% - 16px);margin:8px;justify-content:center;font-size:13.5px}
+.files{display:grid;gap:8px}
+.f{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
+.f b{flex:none;font:700 12px 'JetBrains Mono',monospace;color:var(--cyan);background:rgba(56,214,255,.12);border-radius:6px;padding:4px 8px}
+.f span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg{padding:44px 20px;text-align:center;color:var(--muted)}
+dialog{border:0;padding:0;background:transparent;max-width:96vw;max-height:94vh}
+dialog::backdrop{background:rgba(3,6,14,.88)}
+dialog img{max-width:96vw;max-height:84vh;display:block;margin:0 auto;border-radius:12px}
+dialog .row{display:flex;gap:10px;justify-content:center;margin-top:12px}
+.dev{display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:12px 16px;border-radius:16px;border:1px solid transparent;background:linear-gradient(#0d1428,#0d1428) padding-box,linear-gradient(120deg,var(--cyan),var(--violet),var(--pink)) border-box}
+.dev .av{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font:800 14px 'Unbounded',sans-serif;background:linear-gradient(135deg,var(--violet),var(--cyan));color:#fff}
+.dev small{display:block;color:var(--muted);font-size:12.5px;line-height:1.2}
+.dev strong{font:800 17px 'Unbounded',sans-serif;background:linear-gradient(90deg,#fff,var(--cyan) 60%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+footer{text-align:center;margin-top:26px;color:var(--muted);font-size:14.5px}
+footer strong{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i></div>
+<main class="wrap">
+  <span class="badge"><b></b>AVCOE &middot; Mere Practicals</span>
+  <h1 id="h">Loading...</h1>
+  <p class="sub" id="sub">Aapke saare practicals yahan milenge, HD download ke saath.</p>
+  <div class="dev"><div class="av">AS</div><div><small>Developed by</small><strong>Arsalan Shaikh</strong></div></div>
+  <div id="out"></div>
+  <footer>Made with ♥ for AVCOE students by <strong>Arsalan Shaikh</strong><br>AI &amp; DS &middot; Division B</footer>
+</main>
+
+<dialog id="dlg"><img id="big" alt=""><div class="row"><a class="btn pri" id="bigdl">HD Download</a><button class="btn" id="bigx">Band karo</button></div></dialog>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = { apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ", authDomain: "multi-service-app-77dd8.firebaseapp.com", projectId: "multi-service-app-77dd8", storageBucket: "multi-service-app-77dd8.appspot.com", messagingSenderId: "123732555482", appId: "1:123732555482:web:ea47c825e0dbb504f597e3" };
+const db = getFirestore(initializeApp(firebaseConfig));
+const $ = id => document.getElementById(id);
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+// Cloudinary: original quality + force download
+const dl = u => u.replace("/upload/", "/upload/fl_attachment/");
+const thumb = u => u.replace("/upload/", "/upload/w_520,q_auto,f_auto/");
+const slug = t => (t || "practical").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "practical";
+const fmt = ms => new Date(ms).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" });
+let items = [];
+
+function fail(msg) { $("h").textContent = "Link nahi mila"; $("sub").textContent = ""; $("out").innerHTML = `<div class="msg glass">${msg}</div>`; }
+
+const t = new URLSearchParams(location.search).get("t");
+if (!/^[a-f0-9]{32}$/.test(t || "")) fail("Ye link sahi nahi hai. WhatsApp wala poora link kholo.");
+else {
+  try {
+    const snap = await getDoc(doc(db, "portal", t));
+    if (!snap.exists()) fail("Abhi tak aapke naam se koi practical share nahi hua.");
+    else render(snap.data());
+  } catch (e) { fail("Data load nahi hua. Thodi der baad try karo."); console.error(e); }
+}
+
+function render(d) {
+  items = [...(d.items || [])].sort((a, b) => b.at - a.at);
+  $("h").textContent = "Namaste, " + d.studentName;
+  $("sub").textContent = `${items.length} practical${items.length === 1 ? "" : "s"} mile. Neeche se HD me download karo.`;
+  $("out").innerHTML = items.map((it, i) => `
+    <article class="card glass" style="animation-delay:${Math.min(i, 8) * 70}ms">
+      <h2>${esc(it.title || "Practical")}</h2>
+      <div class="when">${fmt(it.at)}</div>
+      ${it.code ? `<h4>Code</h4><div class="editor"><div class="bar2"><s></s><s></s><s></s><span><button class="btn" data-cp="${i}">Copy</button><button class="btn" data-cd="${i}">Download</button></span></div><pre>${esc(it.code)}</pre></div>` : ""}
+      ${(it.images || []).length ? `<h4>Screenshots</h4><div class="imgs">${it.images.map(u => `<div class="im"><img src="${esc(thumb(u))}" data-big="${esc(u)}" alt="Screenshot" loading="lazy"><a class="btn pri" href="${esc(dl(u))}">HD Download</a></div>`).join("")}</div>` : ""}
+      ${(it.files || []).length ? `<h4>Files</h4><div class="files">${it.files.map(f => `<div class="f"><b>${esc((f.name.split(".").pop() || "file").slice(0, 5).toUpperCase())}</b><span title="${esc(f.name)}">${esc(f.name)}</span><a class="btn pri" href="${esc(dl(f.url))}">Download</a></div>`).join("")}</div>` : ""}
+    </article>`).join("");
+}
+
+$("out").onclick = async e => {
+  const cp = e.target.closest("[data-cp]"), cd = e.target.closest("[data-cd]"), im = e.target.closest("[data-big]");
+  if (cp) { try { await navigator.clipboard.writeText(items[cp.dataset.cp].code); cp.textContent = "Copy ho gaya ✓"; } catch { cp.textContent = "Copy nahi hua"; } setTimeout(() => cp.textContent = "Copy", 1800); }
+  if (cd) {
+    const it = items[cd.dataset.cd], a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([it.code], { type: "text/plain;charset=utf-8" }));
+    a.download = slug(it.title) + ".txt"; a.click(); URL.revokeObjectURL(a.href);
+  }
+  if (im) { $("big").src = im.dataset.big; $("bigdl").href = dl(im.dataset.big); $("dlg").showModal(); }
+};
+$("bigx").onclick = () => $("dlg").close();
+$("dlg").addEventListener("click", e => { if (e.target === $("dlg")) $("dlg").close(); });
+</script>
+</body>
+</html>
