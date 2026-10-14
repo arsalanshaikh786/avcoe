@@ -132,13 +132,14 @@ footer strong{font-size:16px;background:linear-gradient(90deg,var(--cyan),var(--
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ====== CONFIG ====== */
 const firebaseConfig = { apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ", authDomain: "multi-service-app-77dd8.firebaseapp.com", projectId: "multi-service-app-77dd8", storageBucket: "multi-service-app-77dd8.appspot.com", messagingSenderId: "123732555482", appId: "1:123732555482:web:ea47c825e0dbb504f597e3" };
 const CLOUDINARY = { cloudName: "dbirgrdbp", uploadPreset: "ml_default" }; // preset yahan daalo, ya page ke "Cloudinary setting" me
 const getPreset = () => CLOUDINARY.uploadPreset;
 const ULTRA = { base: "https://api.ultramsg.com/instance192669", token: "xnbaeejigdwjjij1" };
+const SALT = "avcoe-aids-b-2026"; // apna koi bhi secret text daalo (baad me mat badalna, warna purane links band ho jayenge)
 const CREDIT = "_Developed by Arsalan Shaikh • AI & DS, Div B • AVCOE_";
 /* ==================== */
 
@@ -165,6 +166,11 @@ function normalizeNumber(raw) {
   if (d.length === 12 && d.startsWith("91")) return d;
   if (d.length === 11 && d.startsWith("0")) return "91" + d.slice(1);
   return null;
+}
+
+async function tokenFor(to) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(to + "|" + SALT));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("").slice(0, 32);
 }
 
 /* ---------- images ---------- */
@@ -258,12 +264,22 @@ sendBtn.onclick = async () => {
       urls.push({ url: await uploadToCloudinary(images[i]), name: images[i].name, img: isImg(images[i]) }); step();
     }
 
+    const token = await tokenFor(to);
+    const link = new URL("my.html", location.href); link.search = "?t=" + token;
+    const tail = `${CREDIT}\n\n🔗 Aapke saare practicals (HD download ke saath):\n${link.href}`;
+    try {
+      await setDoc(doc(db, "portal", token), {
+        studentName: name, studentNumber: "+" + to,
+        items: arrayUnion({ title, code, images: urls.filter(u => u.img).map(u => u.url), files: urls.filter(u => !u.img).map(u => ({ name: u.name, url: u.url })), at: Date.now() })
+      }, { merge: true });
+    } catch (err) { console.warn("Portal save fail:", err); }
+
     if (code) {
       say("Code bhej rahe hain...");
       const parts = chunk(code);
       for (let i = 0; i < parts.length; i++) {
         const head = i === 0 ? header + "\n" : `(Part ${i + 1}/${parts.length})\n`;
-        const foot = i === parts.length - 1 && !urls.length ? "\n\n" + CREDIT : "";
+        const foot = i === parts.length - 1 && !urls.length ? "\n\n" + tail : "";
         await ultra("chat", { to, body: `${head}\`\`\`${parts[i]}\`\`\`${foot}` });
       }
       step();
@@ -272,7 +288,7 @@ sendBtn.onclick = async () => {
     for (let i = 0; i < urls.length; i++) {
       say(`File ${i + 1}/${urls.length} bhej rahe hain...`);
       const u = urls[i];
-      const cap = ((i === 0 && !code ? header + "\n" : "") + (urls.length > 1 ? `${i + 1}/${urls.length}` : "") + (i === urls.length - 1 ? `\n${CREDIT}` : "")).trim();
+      const cap = ((i === 0 && !code ? header + "\n" : "") + (urls.length > 1 ? `${i + 1}/${urls.length}` : "") + (i === urls.length - 1 ? `\n${tail}` : "")).trim();
       if (u.img) await ultra("image", { to, image: u.url, caption: cap });
       else await ultra("document", { to, document: u.url, filename: u.name, caption: cap });
     }
